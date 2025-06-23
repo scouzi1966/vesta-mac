@@ -84,6 +84,15 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 Divider()
                 HStack(spacing: 12) {
+                    Button(action: startNewChat) {
+                        Image(systemName: "plus.message")
+                            .foregroundStyle(.white)
+                            .padding(8)
+                            .background(messages.isEmpty ? .gray : .green)
+                            .clipShape(Circle())
+                    }
+                    .disabled(messages.isEmpty)
+                    
                     TextField("Type your message...", text: $inputText, axis: .vertical)
                         .textFieldStyle(.roundedBorder)
                         .lineLimit(1...4)
@@ -140,6 +149,13 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    private func startNewChat() {
+        messages.removeAll()
+        inputText = ""
+        isLoading = false
+        initializeSession()
     }
     
     private func getAIResponse(for userInput: String) async {
