@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FoundationModels
+import MarkdownUI
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -208,11 +209,12 @@ struct ChatBubble: View {
             }
             
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
-                Text(message.content)
+                Markdown(message.content)
+                    .foregroundStyle(message.isUser ? .white : .primary)
                     .padding(12)
                     .background(message.isUser ? .blue : .gray.opacity(0.2))
-                    .foregroundStyle(message.isUser ? .white : .primary)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .textSelection(.enabled)
                 
                 Text(message.timestamp.formatted(date: .omitted, time: .shortened))
                     .font(.caption2)
@@ -224,6 +226,7 @@ struct ChatBubble: View {
             }
         }
     }
+    
 }
 
 #Preview {
