@@ -16,37 +16,37 @@
 			containerPortal = 3D8A9DC52E09C8F7001EAA76 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3D8A9DCC2E09C8F7001EAA76;
-			remoteInfo = "Claude-vscode-test";
+			remoteInfo = "Vesta";
 		};
 		3D8A9DE52E09C8F8001EAA76 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D8A9DC52E09C8F7001EAA76 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3D8A9DCC2E09C8F7001EAA76;
-			remoteInfo = "Claude-vscode-test";
+			remoteInfo = "Vesta";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D8A9DCD2E09C8F7001EAA76 /* Claude-vscode-test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Claude-vscode-test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D8A9DDA2E09C8F8001EAA76 /* Claude-vscode-testTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Claude-vscode-testTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D8A9DE42E09C8F8001EAA76 /* Claude-vscode-testUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Claude-vscode-testUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vesta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VestaTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VestaUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3D8A9DCF2E09C8F7001EAA76 /* Claude-vscode-test */ = {
+		3D8A9DCF2E09C8F7001EAA76 /* Vesta */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Claude-vscode-test";
+			path = "Vesta";
 			sourceTree = "<group>";
 		};
-		3D8A9DDD2E09C8F8001EAA76 /* Claude-vscode-testTests */ = {
+		3D8A9DDD2E09C8F8001EAA76 /* VestaTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Claude-vscode-testTests";
+			path = "VestaTests";
 			sourceTree = "<group>";
 		};
-		3D8A9DE72E09C8F8001EAA76 /* Claude-vscode-testUITests */ = {
+		3D8A9DE72E09C8F8001EAA76 /* VestaUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Claude-vscode-testUITests";
+			path = "VestaUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -90,9 +90,9 @@
 		3D8A9DCE2E09C8F7001EAA76 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D8A9DCD2E09C8F7001EAA76 /* Claude-vscode-test.app */,
-				3D8A9DDA2E09C8F8001EAA76 /* Claude-vscode-testTests.xctest */,
-				3D8A9DE42E09C8F8001EAA76 /* Claude-vscode-testUITests.xctest */,
+				3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */,
+				3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */,
+				3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,9 +100,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3D8A9DCC2E09C8F7001EAA76 /* Claude-vscode-test */ = {
+		3D8A9DCC2E09C8F7001EAA76 /* Vesta */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D8A9DEE2E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-test" */;
+			buildConfigurationList = 3D8A9DEE2E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Vesta" */;
 			buildPhases = (
 				3D8A9DC92E09C8F7001EAA76 /* Sources */,
 				3D8A9DCA2E09C8F7001EAA76 /* Frameworks */,
@@ -113,19 +113,19 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				3D8A9DCF2E09C8F7001EAA76 /* Claude-vscode-test */,
+				3D8A9DCF2E09C8F7001EAA76 /* Vesta */,
 			);
-			name = "Claude-vscode-test";
+			name = "Vesta";
 			packageProductDependencies = (
 				3D8A9DF92E09E54E001EAA76 /* MarkdownUI */,
 			);
-			productName = "Claude-vscode-test";
-			productReference = 3D8A9DCD2E09C8F7001EAA76 /* Claude-vscode-test.app */;
+			productName = "Vesta";
+			productReference = 3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3D8A9DD92E09C8F8001EAA76 /* Claude-vscode-testTests */ = {
+		3D8A9DD92E09C8F8001EAA76 /* VestaTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D8A9DF12E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-testTests" */;
+			buildConfigurationList = 3D8A9DF12E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "VestaTests" */;
 			buildPhases = (
 				3D8A9DD62E09C8F8001EAA76 /* Sources */,
 				3D8A9DD72E09C8F8001EAA76 /* Frameworks */,
@@ -137,18 +137,18 @@
 				3D8A9DDC2E09C8F8001EAA76 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				3D8A9DDD2E09C8F8001EAA76 /* Claude-vscode-testTests */,
+				3D8A9DDD2E09C8F8001EAA76 /* VestaTests */,
 			);
-			name = "Claude-vscode-testTests";
+			name = "VestaTests";
 			packageProductDependencies = (
 			);
-			productName = "Claude-vscode-testTests";
-			productReference = 3D8A9DDA2E09C8F8001EAA76 /* Claude-vscode-testTests.xctest */;
+			productName = "VestaTests";
+			productReference = 3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3D8A9DE32E09C8F8001EAA76 /* Claude-vscode-testUITests */ = {
+		3D8A9DE32E09C8F8001EAA76 /* VestaUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D8A9DF42E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-testUITests" */;
+			buildConfigurationList = 3D8A9DF42E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "VestaUITests" */;
 			buildPhases = (
 				3D8A9DE02E09C8F8001EAA76 /* Sources */,
 				3D8A9DE12E09C8F8001EAA76 /* Frameworks */,
@@ -160,13 +160,13 @@
 				3D8A9DE62E09C8F8001EAA76 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				3D8A9DE72E09C8F8001EAA76 /* Claude-vscode-testUITests */,
+				3D8A9DE72E09C8F8001EAA76 /* VestaUITests */,
 			);
-			name = "Claude-vscode-testUITests";
+			name = "VestaUITests";
 			packageProductDependencies = (
 			);
-			productName = "Claude-vscode-testUITests";
-			productReference = 3D8A9DE42E09C8F8001EAA76 /* Claude-vscode-testUITests.xctest */;
+			productName = "VestaUITests";
+			productReference = 3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -192,7 +192,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3D8A9DC82E09C8F7001EAA76 /* Build configuration list for PBXProject "Claude-vscode-test" */;
+			buildConfigurationList = 3D8A9DC82E09C8F7001EAA76 /* Build configuration list for PBXProject "Vesta" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -210,9 +210,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3D8A9DCC2E09C8F7001EAA76 /* Claude-vscode-test */,
-				3D8A9DD92E09C8F8001EAA76 /* Claude-vscode-testTests */,
-				3D8A9DE32E09C8F8001EAA76 /* Claude-vscode-testUITests */,
+				3D8A9DCC2E09C8F7001EAA76 /* Vesta */,
+				3D8A9DD92E09C8F8001EAA76 /* VestaTests */,
+				3D8A9DE32E09C8F8001EAA76 /* VestaUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -268,12 +268,12 @@
 /* Begin PBXTargetDependency section */
 		3D8A9DDC2E09C8F8001EAA76 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D8A9DCC2E09C8F7001EAA76 /* Claude-vscode-test */;
+			target = 3D8A9DCC2E09C8F7001EAA76 /* Vesta */;
 			targetProxy = 3D8A9DDB2E09C8F8001EAA76 /* PBXContainerItemProxy */;
 		};
 		3D8A9DE62E09C8F8001EAA76 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D8A9DCC2E09C8F7001EAA76 /* Claude-vscode-test */;
+			target = 3D8A9DCC2E09C8F7001EAA76 /* Vesta */;
 			targetProxy = 3D8A9DE52E09C8F8001EAA76 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -420,7 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-test";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Vesta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -451,7 +451,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-test";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Vesta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -472,14 +472,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-testTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Claude-vscode-test.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Claude-vscode-test";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vesta.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vesta";
 			};
 			name = Debug;
 		};
@@ -493,14 +493,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-testTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Claude-vscode-test.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Claude-vscode-test";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vesta.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vesta";
 			};
 			name = Release;
 		};
@@ -512,14 +512,14 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-testUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Claude-vscode-test";
+				TEST_TARGET_NAME = "Vesta";
 			};
 			name = Debug;
 		};
@@ -531,21 +531,21 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Claude-vscode-testUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Claude-vscode-test";
+				TEST_TARGET_NAME = "Vesta";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3D8A9DC82E09C8F7001EAA76 /* Build configuration list for PBXProject "Claude-vscode-test" */ = {
+		3D8A9DC82E09C8F7001EAA76 /* Build configuration list for PBXProject "Vesta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D8A9DEC2E09C8F8001EAA76 /* Debug */,
@@ -554,7 +554,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D8A9DEE2E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-test" */ = {
+		3D8A9DEE2E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Vesta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D8A9DEF2E09C8F8001EAA76 /* Debug */,
@@ -563,7 +563,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D8A9DF12E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-testTests" */ = {
+		3D8A9DF12E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "VestaTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D8A9DF22E09C8F8001EAA76 /* Debug */,
@@ -572,7 +572,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D8A9DF42E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "Claude-vscode-testUITests" */ = {
+		3D8A9DF42E09C8F8001EAA76 /* Build configuration list for PBXNativeTarget "VestaUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D8A9DF52E09C8F8001EAA76 /* Debug */,

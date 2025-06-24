@@ -14,42 +14,42 @@ This is an iOS SwiftUI application created with Xcode 26.0 Beta, targeting iOS 2
 - **Apple Intelligence Integration**: Access to Foundation Models framework for on-device LLM capabilities
 
 **Project Structure:**
-- `Claude-vscode-test/` - Main app source code
-- `Claude-vscode-testTests/` - Unit tests using XCTest
-- `Claude-vscode-testUITests/` - UI tests using XCTest
-- `Claude-vscode-test.xcodeproj/` - Xcode project configuration
+- `Vesta/` - Main app source code
+- `VestaTests/` - Unit tests using XCTest
+- `VestaUITests/` - UI tests using XCTest
+- `Vesta.xcodeproj/` - Xcode project configuration
 
 ## Development Commands
 
 **Build the project:**
 ```bash
-xcodebuild -project Claude-vscode-test.xcodeproj -scheme Claude-vscode-test -configuration Debug build
+xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build
 ```
 
 **Run unit tests:**
 ```bash
-xcodebuild test -project Claude-vscode-test.xcodeproj -scheme Claude-vscode-test -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15'
 ```
 
 **Run UI tests:**
 ```bash
-xcodebuild test -project Claude-vscode-test.xcodeproj -scheme Claude-vscode-test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:Claude-vscode-testUITests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaUITests
 ```
 
 **Run unit tests only:**
 ```bash
-xcodebuild test -project Claude-vscode-test.xcodeproj -scheme Claude-vscode-test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:Claude-vscode-testTests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaTests
 ```
 
 ## Architecture
 
-**App Entry Point:** `Claude_vscode_testApp.swift` contains the main App struct using SwiftUI's `@main` attribute
+**App Entry Point:** `VestaApp.swift` contains the main App struct using SwiftUI's `@main` attribute
 
-**Main View:** `ContentView.swift` contains the primary SwiftUI view with a simple "Hello, world!" interface
+**Main View:** `ContentView.swift` contains the AI chat interface with Apple Intelligence integration
 
 **Testing:** Standard XCTest framework is used for both unit tests and UI tests. Test files include basic template methods for setup, teardown, and example tests.
 
-**Bundle Identifier:** `soprano.Claude-vscode-test`
+**Bundle Identifier:** `soprano.Vesta`
 
 **Deployment Target:** iOS 26.0
 

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Claude-vscode-test
+//  Vesta
 //
 //  Created by Sylvain Cousineau on 2025-06-23.
 //

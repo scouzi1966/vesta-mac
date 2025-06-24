@@ -1,13 +1,13 @@
 //
-//  Claude_vscode_testUITestsLaunchTests.swift
-//  Claude-vscode-testUITests
+//  VestaUITestsLaunchTests.swift
+//  VestaUITests
 //
 //  Created by Sylvain Cousineau on 2025-06-23.
 //
 
 import XCTest
 
-final class Claude_vscode_testUITestsLaunchTests: XCTestCase {
+final class VestaUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

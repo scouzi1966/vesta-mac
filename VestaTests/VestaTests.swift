@@ -1,14 +1,14 @@
 //
-//  Claude_vscode_testTests.swift
-//  Claude-vscode-testTests
+//  VestaTests.swift
+//  VestaTests
 //
 //  Created by Sylvain Cousineau on 2025-06-23.
 //
 
 import XCTest
-@testable import Claude_vscode_test
+@testable import Vesta
 
-final class Claude_vscode_testTests: XCTestCase {
+final class VestaTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
