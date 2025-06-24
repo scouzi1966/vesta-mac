@@ -21,97 +21,297 @@ struct ContentView: View {
     @State private var inputText: String = ""
     @State private var isLoading: Bool = false
     @State private var session: LanguageModelSession?
+    @State private var headerOpacity: Double = 1.0
+    @State private var streamingText: String = ""
+    @State private var isStreaming: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Header
-            HStack {
-                Image(systemName: "brain.head.profile")
-                    .foregroundStyle(.tint)
-                    .font(.title2)
-                Text("AI Assistant")
-                    .font(.headline)
-                Spacer()
-            }
-            .padding()
-            .background(.ultraThinMaterial)
+        ZStack {
+            // iOS 26 Liquid Glass Background
+            LinearGradient(
+                colors: [
+                    Color(.systemBackground).opacity(0.95),
+                    Color(.secondarySystemBackground).opacity(0.8),
+                    Color(.systemBackground).opacity(0.9)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             
-            // Chat Messages
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 12) {
-                        if messages.isEmpty {
-                            VStack(spacing: 16) {
-                                Image(systemName: "bubble.left.and.bubble.right")
-                                    .font(.system(size: 50))
-                                    .foregroundStyle(.secondary)
-                                Text("Start a conversation!")
-                                    .font(.title2)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .padding(.top, 50)
-                        }
-                        
-                        ForEach(messages) { message in
-                            ChatBubble(message: message)
-                                .id(message.id)
-                        }
-                        
-                        if isLoading {
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                Text("Thinking...")
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                            }
-                            .padding(.leading)
-                            .id("loading")
-                        }
-                    }
-                    .padding()
-                }
-                .onChange(of: messages.count) { _, _ in
-                    scrollToBottom(proxy: proxy)
-                }
-                .onChange(of: isLoading) { _, newValue in
-                    if newValue {
-                        scrollToBottom(proxy: proxy)
-                    }
-                }
-            }
-            
-            // Input Area
             VStack(spacing: 0) {
-                Divider()
-                HStack(spacing: 12) {
-                    Button(action: startNewChat) {
-                        Image(systemName: "plus.message")
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background(messages.isEmpty ? .gray : .green)
-                            .clipShape(Circle())
-                    }
-                    .disabled(messages.isEmpty)
+                // Header with Liquid Glass Effect
+                HStack {
+                    Image(systemName: "sparkles")
+                        .font(.title2)
+                        .foregroundStyle(.linearGradient(
+                            colors: [.blue, .purple, .pink],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                        .symbolEffect(.pulse.byLayer, isActive: isLoading)
                     
-                    TextField("Type your message...", text: $inputText, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .lineLimit(1...4)
-                        .onSubmit {
-                            sendMessage()
-                        }
-                    
-                    Button(action: sendMessage) {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isLoading ? .gray : .blue)
-                            .clipShape(Circle())
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Vesta AI")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Text("Powered by Apple Intelligence")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                    .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isLoading)
+                    
+                    Spacer()
+                    
+                    // Glass status indicator
+                    Circle()
+                        .fill(.green.gradient)
+                        .frame(width: 8, height: 8)
+                        .shadow(color: .green, radius: 2)
                 }
-                .padding()
-                .background(.ultraThinMaterial)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(.linearGradient(
+                            colors: [.white.opacity(0.3), .clear],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ), lineWidth: 1)
+                )
+                .padding(.horizontal)
+                .opacity(headerOpacity)
+            
+                // Chat Messages with Glass Scroll View
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            if messages.isEmpty {
+                                VStack(spacing: 24) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(.ultraThinMaterial)
+                                            .frame(width: 100, height: 100)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(.linearGradient(
+                                                        colors: [.white.opacity(0.5), .clear],
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    ), lineWidth: 2)
+                                            )
+                                        
+                                        Image(systemName: "brain.head.profile.fill")
+                                            .font(.system(size: 40))
+                                            .foregroundStyle(.linearGradient(
+                                                colors: [.blue, .purple],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ))
+                                    }
+                                    .scaleEffect(1.0)
+                                    .symbolEffect(.breathe.byLayer, isActive: true)
+                                    
+                                    VStack(spacing: 8) {
+                                        Text("Welcome to Vesta AI")
+                                            .font(.title2)
+                                            .fontWeight(.semibold)
+                                        Text("Start a conversation with Apple Intelligence")
+                                            .font(.callout)
+                                            .foregroundStyle(.secondary)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                }
+                                .padding(.top, 80)
+                                .padding(.horizontal, 40)
+                            }
+                            
+                            ForEach(messages) { message in
+                                ChatBubble(message: message)
+                                    .id(message.id)
+                                    .transition(.asymmetric(
+                                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                                        removal: .move(edge: .top).combined(with: .opacity)
+                                    ))
+                            }
+                            
+                            // Show streaming message separately
+                            if isStreaming && !streamingText.isEmpty {
+                                ChatBubble(message: ChatMessage(content: streamingText, isUser: false))
+                                    .id("streaming")
+                            }
+                            
+                            // Invisible anchor for smooth scrolling
+                            Color.clear
+                                .frame(height: 1)
+                                .id("bottom")
+                            
+                            if isLoading {
+                                HStack(spacing: 12) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(.thinMaterial)
+                                            .frame(width: 40, height: 40)
+                                        
+                                        ProgressView()
+                                            .scaleEffect(0.8)
+                                            .tint(.secondary)
+                                    }
+                                    
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Vesta is thinking...")
+                                            .font(.callout)
+                                            .foregroundStyle(.secondary)
+                                        Text("Powered by Apple Intelligence")
+                                            .font(.caption2)
+                                            .foregroundStyle(.tertiary)
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 20)
+                                .id("loading")
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 20)
+                    }
+                    .scrollClipDisabled()
+                    .onChange(of: messages.count) { _, _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                proxy.scrollTo("bottom", anchor: .bottom)
+                            }
+                        }
+                    }
+                    .onChange(of: streamingText) { _, _ in
+                        // Only scroll during streaming, with gentle animation
+                        if isStreaming {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                withAnimation(.linear(duration: 0.1)) {
+                                    proxy.scrollTo("bottom", anchor: .bottom)
+                                }
+                            }
+                        }
+                    }
+                    .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                        geometry.contentOffset.y
+                    } action: { _, newValue in
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            headerOpacity = newValue > 50 ? 0.9 : 1.0
+                        }
+                    }
+                }
+            
+                // Glass Input Area with iOS 26 Design
+                VStack(spacing: 12) {
+                    // Input container with glass effect
+                    HStack(spacing: 12) {
+                        // New chat button with iOS 26 Liquid Glass design
+                        Button(action: startNewChat) {
+                            ZStack {
+                                // Glass background
+                                Circle()
+                                    .fill(.ultraThinMaterial)
+                                    .frame(width: 44, height: 44)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(.linearGradient(
+                                                colors: [.white.opacity(0.4), .white.opacity(0.1)],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ), lineWidth: 1.5)
+                                    )
+                                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                
+                                // Icon with glass effect
+                                Image(systemName: "square.and.pencil")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundStyle(.linearGradient(
+                                        colors: messages.isEmpty ? 
+                                            [.secondary, .secondary.opacity(0.6)] : 
+                                            [.blue, .cyan],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ))
+                                    .symbolEffect(.bounce, value: !messages.isEmpty)
+                            }
+                        }
+                        .disabled(messages.isEmpty)
+                        .scaleEffect(messages.isEmpty ? 0.85 : 1.0)
+                        .opacity(messages.isEmpty ? 0.6 : 1.0)
+                        .animation(.bouncy(duration: 0.4, extraBounce: 0.1), value: messages.isEmpty)
+                        
+                        // Glass text field
+                        HStack(spacing: 8) {
+                            TextField("Message Vesta AI...", text: $inputText, axis: .vertical)
+                                .textFieldStyle(.plain)
+                                .lineLimit(1...4)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                .onSubmit {
+                                    sendMessage()
+                                }
+                        }
+                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.linearGradient(
+                                    colors: [.white.opacity(0.2), .clear],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ), lineWidth: 1)
+                        )
+                        
+                        // Send button with enhanced glass effect
+                        Button(action: sendMessage) {
+                            ZStack {
+                                Circle()
+                                    .fill(.linearGradient(
+                                        colors: inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isLoading ? 
+                                            [.gray.opacity(0.3), .gray.opacity(0.2)] : 
+                                            [.blue, .purple],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ))
+                                    .frame(width: 44, height: 44)
+                                    .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
+                                
+                                Image(systemName: isLoading ? "stop.circle.fill" : "arrow.up.circle.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(.white)
+                                    .symbolEffect(.bounce, value: inputText)
+                            }
+                        }
+                        .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isLoading)
+                        .scaleEffect(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isLoading ? 0.9 : 1.0)
+                        .animation(.bouncy(duration: 0.3), value: inputText.isEmpty)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                    
+                    // Apple Intelligence attribution
+                    HStack {
+                        Image(systemName: "apple.logo")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text("Apple Intelligence")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.bottom, 8)
+                }
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(.linearGradient(
+                            colors: [.white.opacity(0.3), .clear],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ), lineWidth: 1)
+                )
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
             }
         }
         .onAppear {
@@ -140,17 +340,6 @@ struct ContentView: View {
         }
     }
     
-    private func scrollToBottom(proxy: ScrollViewProxy) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.easeInOut(duration: 0.5)) {
-                if isLoading {
-                    proxy.scrollTo("loading", anchor: .bottom)
-                } else if let lastMessage = messages.last {
-                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                }
-            }
-        }
-    }
     
     private func startNewChat() {
         messages.removeAll()
@@ -168,30 +357,35 @@ struct ContentView: View {
             return
         }
         
+        await MainActor.run {
+            isLoading = false
+            isStreaming = true
+            streamingText = ""
+        }
+        
         do {
             let stream = session.streamResponse(to: userInput)
-            var accumulatedResponse = ""
-            var currentMessageIndex: Int?
             
             for try await partialText in stream {
                 await MainActor.run {
-                    accumulatedResponse = partialText
-                    
-                    if let index = currentMessageIndex {
-                        // Update existing message
-                        messages[index] = ChatMessage(content: accumulatedResponse, isUser: false)
-                    } else {
-                        // Add new message
-                        messages.append(ChatMessage(content: accumulatedResponse, isUser: false))
-                        currentMessageIndex = messages.count - 1
-                    }
-                    
-                    isLoading = false
+                    streamingText = partialText
                 }
+                // Small delay to make it readable
+                try? await Task.sleep(nanoseconds: 50_000_000) // 50ms
+            }
+            
+            // Move to permanent messages after streaming completes
+            await MainActor.run {
+                let finalText = streamingText
+                messages.append(ChatMessage(content: finalText, isUser: false))
+                isStreaming = false
+                streamingText = ""
             }
             
         } catch {
             await MainActor.run {
+                isStreaming = false
+                streamingText = ""
                 messages.append(ChatMessage(content: "Sorry, I encountered an error. Please try again.", isUser: false))
                 isLoading = false
             }
@@ -201,32 +395,128 @@ struct ContentView: View {
 
 struct ChatBubble: View {
     let message: ChatMessage
+    @State private var isVisible = false
     
     var body: some View {
-        HStack {
+        HStack(alignment: .bottom, spacing: 12) {
             if message.isUser {
-                Spacer(minLength: 60)
+                Spacer(minLength: 40)
+            } else {
+                // AI Avatar with glass effect
+                ZStack {
+                    Circle()
+                        .fill(.thinMaterial)
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Circle()
+                                .stroke(.linearGradient(
+                                    colors: [.white.opacity(0.3), .clear],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ), lineWidth: 1)
+                        )
+                    
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.linearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                }
             }
             
-            VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
-                Markdown(message.content)
-                    .foregroundStyle(message.isUser ? .white : .primary)
-                    .padding(12)
-                    .background(message.isUser ? .blue : .gray.opacity(0.2))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .textSelection(.enabled)
+            VStack(alignment: message.isUser ? .trailing : .leading, spacing: 6) {
+                // Message content with enhanced glass bubble
+                VStack(alignment: .leading, spacing: 0) {
+                    Markdown(message.content)
+                        .foregroundStyle(message.isUser ? .white : .primary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                }
+                .background(
+                    ZStack {
+                        if message.isUser {
+                            // User message: gradient glass effect
+                            LinearGradient(
+                                colors: [.blue, .purple.opacity(0.8)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        } else {
+                            // AI message: subtle glass material
+                            Color.clear
+                                .background(.thinMaterial)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(.linearGradient(
+                                colors: message.isUser ? 
+                                    [.white.opacity(0.4), .clear] :
+                                    [.white.opacity(0.2), .clear],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ), lineWidth: 1)
+                    )
+                )
+                .shadow(
+                    color: message.isUser ? .blue.opacity(0.3) : .black.opacity(0.1),
+                    radius: message.isUser ? 8 : 4,
+                    x: 0,
+                    y: message.isUser ? 2 : 1
+                )
+                .textSelection(.enabled)
                 
-                Text(message.timestamp.formatted(date: .omitted, time: .shortened))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                // Timestamp with glass styling
+                HStack(spacing: 4) {
+                    if !message.isUser {
+                        Image(systemName: "apple.logo")
+                            .font(.system(size: 8))
+                            .foregroundStyle(.secondary.opacity(0.6))
+                    }
+                    
+                    Text(message.timestamp.formatted(date: .omitted, time: .shortened))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(.ultraThinMaterial, in: Capsule())
+                }
             }
             
             if !message.isUser {
-                Spacer(minLength: 60)
+                Spacer(minLength: 40)
+            } else {
+                // User indicator
+                ZStack {
+                    Circle()
+                        .fill(.thinMaterial)
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Circle()
+                                .stroke(.linearGradient(
+                                    colors: [.white.opacity(0.3), .clear],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ), lineWidth: 1)
+                        )
+                    
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .scaleEffect(isVisible ? 1.0 : 0.8)
+        .opacity(isVisible ? 1.0 : 0.0)
+        .onAppear {
+            withAnimation(.bouncy(duration: 0.6, extraBounce: 0.1)) {
+                isVisible = true
             }
         }
     }
-    
 }
 
 #Preview {
