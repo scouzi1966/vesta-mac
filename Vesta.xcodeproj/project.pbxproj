@@ -16,37 +16,50 @@
 			containerPortal = 3D8A9DC52E09C8F7001EAA76 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3D8A9DCC2E09C8F7001EAA76;
-			remoteInfo = "Vesta";
+			remoteInfo = Vesta;
 		};
 		3D8A9DE52E09C8F8001EAA76 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D8A9DC52E09C8F7001EAA76 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3D8A9DCC2E09C8F7001EAA76;
-			remoteInfo = "Vesta";
+			remoteInfo = Vesta;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vesta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VestaTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VestaUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vesta.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VestaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VestaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3DED393B2E134A9200650DC0 /* Exceptions for "Vesta" folder in "Vesta" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3D8A9DCC2E09C8F7001EAA76 /* Vesta */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3D8A9DCF2E09C8F7001EAA76 /* Vesta */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Vesta";
+			exceptions = (
+				3DED393B2E134A9200650DC0 /* Exceptions for "Vesta" folder in "Vesta" target */,
+			);
+			path = Vesta;
 			sourceTree = "<group>";
 		};
 		3D8A9DDD2E09C8F8001EAA76 /* VestaTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "VestaTests";
+			path = VestaTests;
 			sourceTree = "<group>";
 		};
 		3D8A9DE72E09C8F8001EAA76 /* VestaUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "VestaUITests";
+			path = VestaUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -80,9 +93,9 @@
 		3D8A9DC42E09C8F7001EAA76 = {
 			isa = PBXGroup;
 			children = (
-				3D8A9DCF2E09C8F7001EAA76 /* Claude-vscode-test */,
-				3D8A9DDD2E09C8F8001EAA76 /* Claude-vscode-testTests */,
-				3D8A9DE72E09C8F8001EAA76 /* Claude-vscode-testUITests */,
+				3D8A9DCF2E09C8F7001EAA76 /* Vesta */,
+				3D8A9DDD2E09C8F8001EAA76 /* VestaTests */,
+				3D8A9DE72E09C8F8001EAA76 /* VestaUITests */,
 				3D8A9DCE2E09C8F7001EAA76 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -115,11 +128,11 @@
 			fileSystemSynchronizedGroups = (
 				3D8A9DCF2E09C8F7001EAA76 /* Vesta */,
 			);
-			name = "Vesta";
+			name = Vesta;
 			packageProductDependencies = (
 				3D8A9DF92E09E54E001EAA76 /* MarkdownUI */,
 			);
-			productName = "Vesta";
+			productName = Vesta;
 			productReference = 3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -139,10 +152,10 @@
 			fileSystemSynchronizedGroups = (
 				3D8A9DDD2E09C8F8001EAA76 /* VestaTests */,
 			);
-			name = "VestaTests";
+			name = VestaTests;
 			packageProductDependencies = (
 			);
-			productName = "VestaTests";
+			productName = VestaTests;
 			productReference = 3D8A9DDA2E09C8F8001EAA76 /* VestaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -162,10 +175,10 @@
 			fileSystemSynchronizedGroups = (
 				3D8A9DE72E09C8F8001EAA76 /* VestaUITests */,
 			);
-			name = "VestaUITests";
+			name = VestaUITests;
 			packageProductDependencies = (
 			);
-			productName = "VestaUITests";
+			productName = VestaUITests;
 			productReference = 3D8A9DE42E09C8F8001EAA76 /* VestaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -410,6 +423,7 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vesta/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -420,7 +434,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Vesta";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.Vesta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -441,6 +455,7 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vesta/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -451,7 +466,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.Vesta";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.Vesta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -472,7 +487,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaTests";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.VestaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -493,7 +508,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaTests";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.VestaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -512,14 +527,14 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.VestaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Vesta";
+				TEST_TARGET_NAME = Vesta;
 			};
 			name = Debug;
 		};
@@ -531,14 +546,14 @@
 				DEVELOPMENT_TEAM = PBRA9246R6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "soprano.VestaUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = soprano.VestaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Vesta";
+				TEST_TARGET_NAME = Vesta;
 			};
 			name = Release;
 		};

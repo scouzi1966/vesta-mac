@@ -8,6 +8,8 @@
 import SwiftUI
 import FoundationModels
 import MarkdownUI
+import Speech
+import AVFoundation
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -24,6 +26,11 @@ struct ContentView: View {
     @State private var headerOpacity: Double = 1.0
     @State private var streamingText: String = ""
     @State private var isStreaming: Bool = false
+    @State private var isRecording: Bool = false
+    @State private var speechRecognizer: SFSpeechRecognizer?
+    @State private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    @State private var recognitionTask: SFSpeechRecognitionTask?
+    @State private var audioEngine: AVAudioEngine = AVAudioEngine()
     
     var body: some View {
         ZStack {
@@ -90,7 +97,7 @@ struct ContentView: View {
                                 VStack(spacing: 24) {
                                     ZStack {
                                         Circle()
-                                            .fill(.ultraThinMaterial)
+                                            .fill(.thinMaterial)
                                             .frame(width: 100, height: 100)
                                             .overlay(
                                                 Circle()
@@ -212,7 +219,7 @@ struct ContentView: View {
                             ZStack {
                                 // Glass background
                                 Circle()
-                                    .fill(.ultraThinMaterial)
+                                    .fill(.thinMaterial)
                                     .frame(width: 44, height: 44)
                                     .overlay(
                                         Circle()
@@ -241,6 +248,46 @@ struct ContentView: View {
                         .scaleEffect(messages.isEmpty ? 0.85 : 1.0)
                         .opacity(messages.isEmpty ? 0.6 : 1.0)
                         .animation(.bouncy(duration: 0.4, extraBounce: 0.1), value: messages.isEmpty)
+                        
+                        // Microphone button with iOS 26 Liquid Glass design
+                        Button(action: toggleSpeechRecognition) {
+                            ZStack {
+                                if isRecording {
+                                    Circle()
+                                        .fill(Color.red.opacity(0.8))
+                                        .frame(width: 44, height: 44)
+                                } else {
+                                    Circle()
+                                        .fill(Color(.systemBackground).opacity(0.4))
+                                        .background(.thinMaterial, in: Circle())
+                                        .frame(width: 44, height: 44)
+                                }
+                                // Overlay and shadow remain the same for both states
+                                Circle()
+                                    .stroke(
+                                        .linearGradient(
+                                            colors: isRecording ?
+                                                [.red.opacity(0.6), .red.opacity(0.2)] :
+                                                [.white.opacity(0.4), .white.opacity(0.1)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ), lineWidth: 0.5
+                                    )
+                                    .shadow(color: isRecording ? .red.opacity(0.3) : .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                
+                                // Icon with recording state
+                                Image(systemName: isRecording ? "mic.fill" : "mic")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundStyle(
+                                        isRecording
+                                            ? LinearGradient(colors: [.white, .white], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                            : LinearGradient(colors: [.blue, .cyan], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                    )
+                                    .symbolEffect(.pulse.byLayer, isActive: isRecording)
+                            }
+                        }
+                        .scaleEffect(isRecording ? 1.1 : 1.0)
+                        .animation(.bouncy(duration: 0.3), value: isRecording)
                         
                         // Glass text field
                         HStack(spacing: 8) {
@@ -316,6 +363,7 @@ struct ContentView: View {
         }
         .onAppear {
             initializeSession()
+            setupSpeechRecognition()
         }
     }
     
@@ -326,9 +374,102 @@ struct ContentView: View {
         """)
     }
     
+    private func setupSpeechRecognition() {
+        speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+        
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+            DispatchQueue.main.async {
+                // Handle different authorization states if needed
+            }
+        }
+    }
+    
+    private func toggleSpeechRecognition() {
+        if isRecording {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+    
+    private func startRecording() {
+        // Cancel any existing task
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        
+        // Configure audio session
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Audio session setup failed: \(error)")
+            return
+        }
+        
+        // Create recognition request
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        
+        guard let recognitionRequest = recognitionRequest else {
+            print("Unable to create recognition request")
+            return
+        }
+        
+        recognitionRequest.shouldReportPartialResults = true
+        
+        // Get audio input node
+        let inputNode = audioEngine.inputNode
+        
+        // Create recognition task
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { result, error in
+            if let result = result {
+                DispatchQueue.main.async {
+                    inputText = result.bestTranscription.formattedString
+                }
+            }
+            
+            if error != nil || result?.isFinal == true {
+                DispatchQueue.main.async {
+                    stopRecording()
+                }
+            }
+        }
+        
+        // Configure audio format
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
+            recognitionRequest.append(buffer)
+        }
+        
+        // Start audio engine
+        audioEngine.prepare()
+        do {
+            try audioEngine.start()
+            isRecording = true
+        } catch {
+            print("Audio engine start failed: \(error)")
+        }
+    }
+    
+    private func stopRecording() {
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+        recognitionRequest?.endAudio()
+        recognitionTask?.cancel()
+        
+        recognitionRequest = nil
+        recognitionTask = nil
+        isRecording = false
+    }
+    
     private func sendMessage() {
         let userMessage = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !userMessage.isEmpty, !isLoading else { return }
+        
+        // Stop any active speech recognition
+        if isRecording {
+            stopRecording()
+        }
         
         // Add user message
         messages.append(ChatMessage(content: userMessage, isUser: true))
