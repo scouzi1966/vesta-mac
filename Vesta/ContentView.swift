@@ -10,7 +10,7 @@ import FoundationModels
 import MarkdownUI
 import Speech
 import AVFoundation
-import LaTeXSwiftUI
+import SwiftMath
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -565,19 +565,11 @@ struct MathMarkdownView: View {
                                 .foregroundStyle(foregroundColor)
                         }
                     case .latexBlock(let latex):
-                        LaTeX(latex)
-                            .font(.system(size: 18))
-                            .foregroundColor(foregroundColor)
+                        MathView(equation: latex, displayStyle: true)
                             .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.vertical, 4)
-                            .parsingMode(.onlyEquations)
-                            .errorMode(.error)
                     case .latexInline(let latex):
-                        LaTeX(latex)
-                            .font(.system(size: 16))
-                            .foregroundColor(foregroundColor)
-                            .parsingMode(.onlyEquations)
-                            .errorMode(.error)
+                        MathView(equation: latex, displayStyle: false)
                     }
                 }
             }
@@ -699,6 +691,25 @@ enum ContentPart {
     case markdown(String)
     case latexBlock(String)
     case latexInline(String)
+}
+
+struct MathView: UIViewRepresentable {
+    let equation: String
+    let displayStyle: Bool
+    
+    func makeUIView(context: Context) -> MTMathUILabel {
+        let mathView = MTMathUILabel()
+        mathView.latex = equation
+        mathView.fontSize = displayStyle ? 18 : 16
+        mathView.textAlignment = displayStyle ? .center : .left
+        return mathView
+    }
+    
+    func updateUIView(_ uiView: MTMathUILabel, context: Context) {
+        uiView.latex = equation
+        uiView.fontSize = displayStyle ? 18 : 16
+        uiView.textAlignment = displayStyle ? .center : .left
+    }
 }
 
 struct ChatBubble: View {

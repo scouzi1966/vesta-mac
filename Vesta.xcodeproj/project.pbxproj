@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D8A9DFA2E09E54E001EAA76 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3D8A9DF92E09E54E001EAA76 /* MarkdownUI */; };
-		3D8A9DFD2E134B5200650DC0 /* LaTeXSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */; };
+		3D8A9DFD2E134B5200650DC0 /* SwiftMath in Frameworks */ = {isa = PBXBuildFile; productRef = 3D8A9DFC2E134B5200650DC0 /* SwiftMath */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D8A9DFA2E09E54E001EAA76 /* MarkdownUI in Frameworks */,
-				3D8A9DFD2E134B5200650DC0 /* LaTeXSwiftUI in Frameworks */,
+				3D8A9DFD2E134B5200650DC0 /* SwiftMath in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +133,7 @@
 			name = Vesta;
 			packageProductDependencies = (
 				3D8A9DF92E09E54E001EAA76 /* MarkdownUI */,
-				3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */,
+				3D8A9DFC2E134B5200650DC0 /* SwiftMath */,
 			);
 			productName = Vesta;
 			productReference = 3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */;
@@ -220,7 +220,7 @@
 			packageReferences = (
 				3D8A9DF72E09E4A3001EAA76 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				3D8A9DF82E09E54E001EAA76 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */,
+				3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "SwiftMath" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3D8A9DCE2E09C8F7001EAA76 /* Products */;
@@ -619,12 +619,12 @@
 				minimumVersion = 2.4.1;
 			};
 		};
-		3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */ = {
+		3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "SwiftMath" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/colinc86/LaTeXSwiftUI";
+			repositoryURL = "https://github.com/mgriebling/SwiftMath";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				minimumVersion = 3.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -635,10 +635,10 @@
 			package = 3D8A9DF82E09E54E001EAA76 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
 		};
-		3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */ = {
+		3D8A9DFC2E134B5200650DC0 /* SwiftMath */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */;
-			productName = LaTeXSwiftUI;
+			package = 3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "SwiftMath" */;
+			productName = SwiftMath;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
