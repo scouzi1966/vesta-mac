@@ -698,17 +698,17 @@ struct MathView: UIViewRepresentable {
     let displayStyle: Bool
     
     func makeUIView(context: Context) -> MTMathUILabel {
-        let mathView = MTMathUILabel()
-        mathView.latex = equation
-        mathView.fontSize = displayStyle ? 18 : 16
-        mathView.textAlignment = displayStyle ? .center : .left
-        return mathView
+        let label = MTMathUILabel()
+        label.displayErrorInline = true
+        return label
     }
     
-    func updateUIView(_ uiView: MTMathUILabel, context: Context) {
-        uiView.latex = equation
-        uiView.fontSize = displayStyle ? 18 : 16
-        uiView.textAlignment = displayStyle ? .center : .left
+    func updateUIView(_ view: MTMathUILabel, context: Context) {
+        view.latex = equation
+        view.font = MTFontManager().font(withName: MathFont.latinModernFont.rawValue, size: displayStyle ? 18 : 16)
+        view.textAlignment = displayStyle ? .center : .left
+        view.labelMode = displayStyle ? .display : .text
+        view.textColor = UIColor.label
     }
 }
 
@@ -843,3 +843,4 @@ struct ChatBubble: View {
 #Preview {
     ContentView()
 }
+
