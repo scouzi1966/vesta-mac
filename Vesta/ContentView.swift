@@ -10,7 +10,7 @@ import FoundationModels
 import MarkdownUI
 import Speech
 import AVFoundation
-import SwiftMath
+import WebKit
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -566,10 +566,13 @@ struct MathMarkdownView: View {
                         }
                     case .latexBlock(let latex):
                         MathView(equation: latex, displayStyle: true)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .frame(height: 60)
+                            .frame(maxWidth: .infinity)
                             .padding(.vertical, 4)
                     case .latexInline(let latex):
                         MathView(equation: latex, displayStyle: false)
+                            .frame(height: 40)
+                            .frame(maxWidth: .infinity)
                     }
                 }
             }
@@ -697,18 +700,45 @@ struct MathView: UIViewRepresentable {
     let equation: String
     let displayStyle: Bool
     
-    func makeUIView(context: Context) -> MTMathUILabel {
-        let label = MTMathUILabel()
-        label.displayErrorInline = true
-        return label
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.scrollView.isScrollEnabled = false
+        webView.isOpaque = false
+        webView.backgroundColor = UIColor.clear
+        return webView
     }
     
-    func updateUIView(_ view: MTMathUILabel, context: Context) {
-        view.latex = equation
-        view.font = MTFontManager().font(withName: MathFont.latinModernFont.rawValue, size: displayStyle ? 18 : 16)
-        view.textAlignment = displayStyle ? .center : .left
-        view.labelMode = displayStyle ? .display : .text
-        view.textColor = UIColor.label
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let mathDelimiters = displayStyle ? "\\[" + equation + "\\]" : "\\(" + equation + "\\)"
+        let html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+            <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+            <script>
+                window.MathJax = {
+                    tex: { inlineMath: [['\\\\(', '\\\\)']], displayMath: [['\\\\[', '\\\\]']] },
+                    chtml: { scale: 0.9 }
+                };
+            </script>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 8px;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    background: transparent;
+                    text-align: \(displayStyle ? "center" : "left");
+                }
+            </style>
+        </head>
+        <body>
+            \(mathDelimiters)
+        </body>
+        </html>
+        """
+        webView.loadHTMLString(html, baseURL: nil)
     }
 }
 
