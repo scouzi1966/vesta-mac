@@ -10,6 +10,7 @@ import FoundationModels
 import MarkdownUI
 import Speech
 import AVFoundation
+import LaTeXSwiftUI
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -371,6 +372,14 @@ struct ContentView: View {
         session = LanguageModelSession(instructions: """
         You are a helpful AI assistant. Provide clear, concise, and friendly responses to user questions and requests. 
         Keep responses conversational and maintain context from previous messages in our conversation.
+        
+        For mathematical content, use LaTeX notation:
+        - Inline math: $equation$
+        - Block math: $$equation$$
+        
+        Examples:
+        - Inline: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
+        - Block: $$E = mc^2$$
         """)
     }
     
@@ -534,6 +543,93 @@ struct ContentView: View {
     }
 }
 
+struct MathMarkdownView: View {
+    let content: String
+    let foregroundColor: Color
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Split content by LaTeX blocks and inline equations
+            let parts = parseContent(content)
+            
+            ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
+                switch part {
+                case .markdown(let text):
+                    Markdown(text)
+                        .foregroundStyle(foregroundColor)
+                case .latexBlock(let latex):
+                    LaTeX(latex)
+                        .foregroundColor(foregroundColor)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 4)
+                case .latexInline(let latex):
+                    LaTeX(latex)
+                        .foregroundColor(foregroundColor)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+    }
+    
+    private func parseContent(_ content: String) -> [ContentPart] {
+        var parts: [ContentPart] = []
+        var currentText = ""
+        var i = content.startIndex
+        
+        while i < content.endIndex {
+            // Check for block LaTeX ($$...$$)
+            if content[i...].hasPrefix("$$") {
+                if !currentText.isEmpty {
+                    parts.append(.markdown(currentText))
+                    currentText = ""
+                }
+                
+                let startIndex = content.index(i, offsetBy: 2)
+                if let endRange = content[startIndex...].range(of: "$$") {
+                    let latexContent = String(content[startIndex..<endRange.lowerBound])
+                    parts.append(.latexBlock(latexContent))
+                    i = endRange.upperBound
+                } else {
+                    currentText.append(content[i])
+                    i = content.index(after: i)
+                }
+            }
+            // Check for inline LaTeX ($...$)
+            else if content[i] == "$" && i != content.startIndex {
+                if !currentText.isEmpty {
+                    parts.append(.markdown(currentText))
+                    currentText = ""
+                }
+                
+                let startIndex = content.index(after: i)
+                if let endIndex = content[startIndex...].firstIndex(of: "$") {
+                    let latexContent = String(content[startIndex..<endIndex])
+                    parts.append(.latexInline(latexContent))
+                    i = content.index(after: endIndex)
+                } else {
+                    currentText.append(content[i])
+                    i = content.index(after: i)
+                }
+            } else {
+                currentText.append(content[i])
+                i = content.index(after: i)
+            }
+        }
+        
+        if !currentText.isEmpty {
+            parts.append(.markdown(currentText))
+        }
+        
+        return parts
+    }
+}
+
+enum ContentPart {
+    case markdown(String)
+    case latexBlock(String)
+    case latexInline(String)
+}
+
 struct ChatBubble: View {
     let message: ChatMessage
     @State private var isVisible = false
@@ -570,10 +666,12 @@ struct ChatBubble: View {
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 6) {
                 // Message content with enhanced glass bubble
                 VStack(alignment: .leading, spacing: 0) {
-                    Markdown(message.content)
-                        .foregroundStyle(message.isUser ? .white : .primary)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
+                    MathMarkdownView(
+                        content: message.content,
+                        foregroundColor: message.isUser ? .white : .primary
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                 }
                 .background(
                     ZStack {

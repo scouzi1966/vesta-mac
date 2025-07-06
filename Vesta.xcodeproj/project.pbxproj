@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D8A9DFA2E09E54E001EAA76 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3D8A9DF92E09E54E001EAA76 /* MarkdownUI */; };
+		3D8A9DFD2E134B5200650DC0 /* LaTeXSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D8A9DFA2E09E54E001EAA76 /* MarkdownUI in Frameworks */,
+				3D8A9DFD2E134B5200650DC0 /* LaTeXSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 			name = Vesta;
 			packageProductDependencies = (
 				3D8A9DF92E09E54E001EAA76 /* MarkdownUI */,
+				3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */,
 			);
 			productName = Vesta;
 			productReference = 3D8A9DCD2E09C8F7001EAA76 /* Vesta.app */;
@@ -217,6 +220,7 @@
 			packageReferences = (
 				3D8A9DF72E09E4A3001EAA76 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				3D8A9DF82E09E54E001EAA76 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3D8A9DCE2E09C8F7001EAA76 /* Products */;
@@ -615,6 +619,14 @@
 				minimumVersion = 2.4.1;
 			};
 		};
+		3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/colinc86/LaTeXSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -622,6 +634,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3D8A9DF82E09E54E001EAA76 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		3D8A9DFC2E134B5200650DC0 /* LaTeXSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D8A9DFB2E134B5200650DC0 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */;
+			productName = LaTeXSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
