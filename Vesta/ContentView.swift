@@ -552,20 +552,33 @@ struct MathMarkdownView: View {
             // Split content by LaTeX blocks and inline equations
             let parts = parseContent(content)
             
-            ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
-                switch part {
-                case .markdown(let text):
-                    Markdown(text)
-                        .foregroundStyle(foregroundColor)
-                case .latexBlock(let latex):
-                    LaTeX(latex)
-                        .foregroundColor(foregroundColor)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 4)
-                case .latexInline(let latex):
-                    LaTeX(latex)
-                        .foregroundColor(foregroundColor)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+            // If no LaTeX content found, just use regular Markdown
+            if parts.allSatisfy({ if case .markdown = $0 { return true } else { return false } }) {
+                Markdown(content)
+                    .foregroundStyle(foregroundColor)
+            } else {
+                ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
+                    switch part {
+                    case .markdown(let text):
+                        if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            Markdown(text)
+                                .foregroundStyle(foregroundColor)
+                        }
+                    case .latexBlock(let latex):
+                        LaTeX(latex)
+                            .font(.system(size: 18))
+                            .foregroundColor(foregroundColor)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 4)
+                            .parsingMode(.onlyEquations)
+                            .errorMode(.error)
+                    case .latexInline(let latex):
+                        LaTeX(latex)
+                            .font(.system(size: 16))
+                            .foregroundColor(foregroundColor)
+                            .parsingMode(.onlyEquations)
+                            .errorMode(.error)
+                    }
                 }
             }
         }
@@ -577,8 +590,25 @@ struct MathMarkdownView: View {
         var i = content.startIndex
         
         while i < content.endIndex {
+            // Check for block LaTeX \[...\]
+            if content[i...].hasPrefix("\\[") {
+                if !currentText.isEmpty {
+                    parts.append(.markdown(currentText))
+                    currentText = ""
+                }
+                
+                let startIndex = content.index(i, offsetBy: 2)
+                if let endRange = content[startIndex...].range(of: "\\]") {
+                    let latexContent = String(content[startIndex..<endRange.lowerBound])
+                    parts.append(.latexBlock(latexContent))
+                    i = endRange.upperBound
+                } else {
+                    currentText.append(content[i])
+                    i = content.index(after: i)
+                }
+            }
             // Check for block LaTeX ($$...$$)
-            if content[i...].hasPrefix("$$") {
+            else if content[i...].hasPrefix("$$") {
                 if !currentText.isEmpty {
                     parts.append(.markdown(currentText))
                     currentText = ""
@@ -594,8 +624,25 @@ struct MathMarkdownView: View {
                     i = content.index(after: i)
                 }
             }
+            // Check for inline LaTeX \(...\)
+            else if content[i...].hasPrefix("\\(") {
+                if !currentText.isEmpty {
+                    parts.append(.markdown(currentText))
+                    currentText = ""
+                }
+                
+                let startIndex = content.index(i, offsetBy: 2)
+                if let endRange = content[startIndex...].range(of: "\\)") {
+                    let latexContent = String(content[startIndex..<endRange.lowerBound])
+                    parts.append(.latexInline(latexContent))
+                    i = endRange.upperBound
+                } else {
+                    currentText.append(content[i])
+                    i = content.index(after: i)
+                }
+            }
             // Check for inline LaTeX ($...$)
-            else if content[i] == "$" && i != content.startIndex {
+            else if content[i] == "$" {
                 if !currentText.isEmpty {
                     parts.append(.markdown(currentText))
                     currentText = ""
@@ -606,6 +653,30 @@ struct MathMarkdownView: View {
                     let latexContent = String(content[startIndex..<endIndex])
                     parts.append(.latexInline(latexContent))
                     i = content.index(after: endIndex)
+                } else {
+                    currentText.append(content[i])
+                    i = content.index(after: i)
+                }
+            }
+            // Check for square bracket LaTeX [...]
+            else if content[i] == "[" && content[i...].contains("]") {
+                let remainder = content[i...]
+                if let endIndex = remainder.firstIndex(of: "]") {
+                    let startIndex = content.index(after: i)
+                    let latexContent = String(content[startIndex..<endIndex])
+                    
+                    // Check if this looks like a mathematical expression
+                    if latexContent.contains("\\") || latexContent.contains("mathbf") || latexContent.contains("nabla") || latexContent.contains("cdot") || latexContent.contains("frac") || latexContent.contains("partial") || latexContent.contains("times") || latexContent.contains("varepsilon") || latexContent.contains("mu_") {
+                        if !currentText.isEmpty {
+                            parts.append(.markdown(currentText))
+                            currentText = ""
+                        }
+                        parts.append(.latexInline(latexContent))
+                        i = content.index(after: endIndex)
+                    } else {
+                        currentText.append(content[i])
+                        i = content.index(after: i)
+                    }
                 } else {
                     currentText.append(content[i])
                     i = content.index(after: i)
