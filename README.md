@@ -54,6 +54,7 @@ The project uses Swift Package Manager for dependency management:
 ### Building
 ```bash
 # Build the project
+sudo xcode-select --switch /Applications/Xcode-beta.app/Contents/Developer
 xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build
 ```
 
