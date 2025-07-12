@@ -61,13 +61,13 @@ xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build
 ### Testing
 ```bash
 # Run all tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16'
 
 # Run only unit tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaTests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16 -only-testing:VestaTests
 
 # Run only UI tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaUITests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:VestaUITests
 ```
 
 ## Project Structure
