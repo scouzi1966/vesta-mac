@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an iOS SwiftUI application created with Xcode 26.0 Beta, targeting iOS 26.0+ Beta. The project follows the standard Xcode project structure with SwiftUI and includes both unit tests and UI tests.
+This is a macOS SwiftUI application created with Xcode 26.0 Beta, targeting macOS 26.0+. The project follows the standard Xcode project structure with SwiftUI and includes both unit tests and UI tests.
 
-**iOS 26 Beta Features:**
-- Uses the new Liquid Glass UI design system introduced in iOS 26
-- Supports dynamic clock adaptation and Clear mode for Home Screen icons
-- Built with latest SwiftUI enhancements including WebView, rich-text editing, and @Animatable macro
-- Includes improvements for TabView minimization, section spacing, and navigation subtitles
-- **Apple Intelligence Integration**: Access to Foundation Models framework for on-device LLM capabilities
+**macOS 26 Features:**
+- **Apple Intelligence Integration**: Uses FoundationModels framework for on-device LLM capabilities
+- Modern SwiftUI design adapted for desktop use with Liquid Glass effects
+- Built with latest SwiftUI enhancements including WebView, rich-text editing, and modern material backgrounds
+- Native macOS window management and sizing
+- Speech recognition and audio input support
+- Mathematical content rendering with MathJax
 
 **Project Structure:**
 - `Vesta/` - Main app source code
@@ -28,64 +29,65 @@ xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build
 
 **Run unit tests:**
 ```bash
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS'
 ```
 
 **Run UI tests:**
 ```bash
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaUITests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS' -only-testing:VestaUITests
 ```
 
 **Run unit tests only:**
 ```bash
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:VestaTests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS' -only-testing:VestaTests
+```
+
+**Build and run the app:**
+```bash
+xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build && open build/Debug/Vesta.app
 ```
 
 ## Architecture
 
 **App Entry Point:** `VestaApp.swift` contains the main App struct using SwiftUI's `@main` attribute
 
-**Main View:** `ContentView.swift` contains the AI chat interface with Apple Intelligence integration
+**Main View:** `ContentView.swift` contains the AI chat interface with mock AI responses (ready for integration with external AI services)
 
 **Testing:** Standard XCTest framework is used for both unit tests and UI tests. Test files include basic template methods for setup, teardown, and example tests.
 
-**Bundle Identifier:** `soprano.Vesta`
+**Bundle Identifier:** `soprano.Vesta-mac`
 
-**Deployment Target:** iOS 26.0
+**Deployment Target:** macOS 26.0
 
 **Swift Version:** 5.0 with modern Swift features enabled including:
 - Swift 6 language mode features
 - String catalog symbol generation
 - Actor isolation on MainActor
 
-## iOS 26 Beta Development Notes
+## macOS Development Notes
 
-**Liquid Glass UI Considerations:**
-- When developing UI components, consider the new Liquid Glass design system
-- Use the new @Animatable macro for smoother view animations
-- Leverage improved SwiftUI features like WebView and rich-text editing with TextView
-- Consider TabView minimization behavior on scroll for navigation design
+**macOS UI Considerations:**
+- Uses modern SwiftUI materials (`.regularMaterial`, `.thinMaterial`) for native macOS appearance
+- Adapted window management with proper sizing and resizability
+- Speech recognition works with macOS microphone permissions
+- MathJax integration via WebKit for mathematical content rendering
 
-**Apple Intelligence & Foundation Models Framework:**
-- Import `FoundationModels` framework for on-device LLM capabilities
-- Use `streamResponse` method for async sequence of partially generated responses
-- Integrate seamlessly with SwiftUI through declarative data binding
-- Optimize for on-device tasks: summarization, extraction, classification
-- Benefits: Works offline, protects privacy, no inference costs
-- Supports guided generation and tool calling
-- Compatible with iPhone 15 Pro/Pro Max and iPhone 16 series
+**Apple Intelligence Integration:**
+- Uses FoundationModels framework for on-device LLM capabilities
+- Streaming responses via `session.streamResponse(to:)` method
+- Maintains user privacy with on-device processing
+- Supports mathematical content with LaTeX notation
+- Seamless integration with SwiftUI through declarative data binding
 
-**Example Integration Pattern:**
-```swift
-import FoundationModels
-import SwiftUI
+**Requirements:**
+- macOS 26.0+ with Apple Intelligence support
+- Mac with M1 or later chip (M4 Pro recommended)
+- Sufficient storage (7GB+ available)
+- Language settings configured for supported regions
 
-// Stream responses and update UI declaratively
-// Ideal for summarizing content, generating suggestions, or extracting information
-```
-
-**Beta-Specific Testing:**
-- Test on iOS 26 beta simulators and devices (iPhone 15 Pro+ or iPhone 16 series)
-- Verify compatibility with Liquid Glass UI elements
-- Test new SwiftUI features like section index labels and custom scroll edge effects
-- Test Foundation Models integration for on-device AI features
+**macOS-Specific Testing:**
+- Test on macOS 26.0+ systems with Apple Intelligence support
+- Verify Apple Intelligence integration and streaming responses
+- Verify window behavior and resizing
+- Test speech recognition with macOS microphone permissions
+- Verify material backgrounds and Liquid Glass effects appear correctly in light/dark modes

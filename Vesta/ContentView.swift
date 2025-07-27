@@ -35,29 +35,27 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            // iOS 26 Liquid Glass Background
+            // macOS Background
             LinearGradient(
                 colors: [
-                    Color(.systemBackground).opacity(0.95),
-                    Color(.secondarySystemBackground).opacity(0.8),
-                    Color(.systemBackground).opacity(0.9)
+                    Color(.windowBackgroundColor).opacity(0.95),
+                    Color(.controlBackgroundColor).opacity(0.8),
+                    Color(.windowBackgroundColor).opacity(0.9)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Header with Liquid Glass Effect
+                // Header for macOS
                 HStack {
-                    Image(systemName: "sparkles")
+                    Image(systemName: "brain.head.profile")
                         .font(.title2)
                         .foregroundStyle(.linearGradient(
-                            colors: [.blue, .purple, .pink],
+                            colors: [.blue, .purple],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ))
-                        .symbolEffect(.pulse.byLayer, isActive: isLoading)
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Vesta AI")
@@ -70,7 +68,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Glass status indicator
+                    // Status indicator
                     Circle()
                         .fill(.green.gradient)
                         .frame(width: 8, height: 8)
@@ -78,15 +76,7 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(.linearGradient(
-                            colors: [.white.opacity(0.3), .clear],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ), lineWidth: 1)
-                )
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
                 .padding(.horizontal)
                 .opacity(headerOpacity)
             
@@ -212,16 +202,16 @@ struct ContentView: View {
                 }
             
                 // Glass Input Area with iOS 26 Design
-                VStack(spacing: 12) {
+                VStack(spacing: 8) {
                     // Input container with glass effect
-                    HStack(spacing: 12) {
+                    HStack(spacing: 8) {
                         // New chat button with iOS 26 Liquid Glass design
                         Button(action: startNewChat) {
                             ZStack {
                                 // Glass background
                                 Circle()
                                     .fill(.thinMaterial)
-                                    .frame(width: 44, height: 44)
+                                    .frame(width: 28, height: 28)
                                     .overlay(
                                         Circle()
                                             .stroke(.linearGradient(
@@ -234,7 +224,7 @@ struct ContentView: View {
                                 
                                 // Icon with glass effect
                                 Image(systemName: "square.and.pencil")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .font(.system(size: 12, weight: .medium))
                                     .foregroundStyle(.linearGradient(
                                         colors: messages.isEmpty ? 
                                             [.secondary, .secondary.opacity(0.6)] : 
@@ -253,32 +243,38 @@ struct ContentView: View {
                         // Microphone button with iOS 26 Liquid Glass design
                         Button(action: toggleSpeechRecognition) {
                             ZStack {
+                                // Glass background
                                 if isRecording {
                                     Circle()
-                                        .fill(Color.red.opacity(0.8))
-                                        .frame(width: 44, height: 44)
+                                        .fill(.red.opacity(0.8))
+                                        .frame(width: 28, height: 28)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(.linearGradient(
+                                                    colors: [.red.opacity(0.6), .red.opacity(0.2)],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                ), lineWidth: 1.5)
+                                        )
+                                        .shadow(color: .red.opacity(0.3), radius: 4, x: 0, y: 2)
                                 } else {
                                     Circle()
-                                        .fill(Color(.systemBackground).opacity(0.4))
-                                        .background(.thinMaterial, in: Circle())
-                                        .frame(width: 44, height: 44)
+                                        .fill(.thinMaterial)
+                                        .frame(width: 28, height: 28)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(.linearGradient(
+                                                    colors: [.white.opacity(0.4), .white.opacity(0.1)],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                ), lineWidth: 1.5)
+                                        )
+                                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                                 }
-                                // Overlay and shadow remain the same for both states
-                                Circle()
-                                    .stroke(
-                                        .linearGradient(
-                                            colors: isRecording ?
-                                                [.red.opacity(0.6), .red.opacity(0.2)] :
-                                                [.white.opacity(0.4), .white.opacity(0.1)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ), lineWidth: 0.5
-                                    )
-                                    .shadow(color: isRecording ? .red.opacity(0.3) : .black.opacity(0.1), radius: 4, x: 0, y: 2)
                                 
                                 // Icon with recording state
                                 Image(systemName: isRecording ? "mic.fill" : "mic")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .font(.system(size: 12, weight: .medium))
                                     .foregroundStyle(
                                         isRecording
                                             ? LinearGradient(colors: [.white, .white], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -287,7 +283,7 @@ struct ContentView: View {
                                     .symbolEffect(.pulse.byLayer, isActive: isRecording)
                             }
                         }
-                        .scaleEffect(isRecording ? 1.1 : 1.0)
+                        .scaleEffect(isRecording ? 1.05 : 1.0)
                         .animation(.bouncy(duration: 0.3), value: isRecording)
                         
                         // Glass text field
@@ -295,8 +291,8 @@ struct ContentView: View {
                             TextField("Message Vesta AI...", text: $inputText, axis: .vertical)
                                 .textFieldStyle(.plain)
                                 .lineLimit(1...4)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
                                 .onSubmit {
                                     sendMessage()
                                 }
@@ -322,11 +318,11 @@ struct ContentView: View {
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     ))
-                                    .frame(width: 44, height: 44)
+                                    .frame(width: 28, height: 28)
                                     .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
                                 
                                 Image(systemName: isLoading ? "stop.circle.fill" : "arrow.up.circle.fill")
-                                    .font(.title2)
+                                    .font(.system(size: 14, weight: .medium))
                                     .foregroundStyle(.white)
                                     .symbolEffect(.bounce, value: inputText)
                             }
@@ -335,8 +331,8 @@ struct ContentView: View {
                         .scaleEffect(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isLoading ? 0.9 : 1.0)
                         .animation(.bouncy(duration: 0.3), value: inputText.isEmpty)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 12)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
                     
                     // Apple Intelligence attribution
                     HStack {
@@ -347,7 +343,7 @@ struct ContentView: View {
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 6)
                 }
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
                 .overlay(
@@ -358,8 +354,8 @@ struct ContentView: View {
                             endPoint: .bottom
                         ), lineWidth: 1)
                 )
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 6)
             }
         }
         .onAppear {
@@ -406,15 +402,8 @@ struct ContentView: View {
         recognitionTask?.cancel()
         recognitionTask = nil
         
-        // Configure audio session
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("Audio session setup failed: \(error)")
-            return
-        }
+        // macOS doesn't use AVAudioSession - permissions are handled differently
+        // Audio engine setup will handle the audio input directly
         
         // Create recognition request
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -696,19 +685,17 @@ enum ContentPart {
     case latexInline(String)
 }
 
-struct MathView: UIViewRepresentable {
+struct MathView: NSViewRepresentable {
     let equation: String
     let displayStyle: Bool
     
-    func makeUIView(context: Context) -> WKWebView {
+    func makeNSView(context: Context) -> WKWebView {
         let webView = WKWebView()
-        webView.scrollView.isScrollEnabled = false
-        webView.isOpaque = false
-        webView.backgroundColor = UIColor.clear
+        webView.setValue(false, forKey: "drawsBackground")
         return webView
     }
     
-    func updateUIView(_ webView: WKWebView, context: Context) {
+    func updateNSView(_ webView: WKWebView, context: Context) {
         let mathDelimiters = displayStyle ? "\\[" + equation + "\\]" : "\\(" + equation + "\\)"
         let html = """
         <!DOCTYPE html>

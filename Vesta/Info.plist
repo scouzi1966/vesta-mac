@@ -10,5 +10,9 @@
 	<string>Vesta needs access to your microphone to enable voice input for chat messages.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Vesta uses speech recognition to convert your voice input into text for chat messages.</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>26.0</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
 </dict>
 </plist>

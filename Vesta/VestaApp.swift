@@ -13,5 +13,8 @@ struct VestaApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        .defaultSize(width: 800, height: 600)
     }
 }
