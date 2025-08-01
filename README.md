@@ -1,11 +1,11 @@
 # Vesta
 
-Vesta is an AI-powered chat application for iOS that leverages Apple Intelligence's Foundation Models framework for on-device AI capabilities. Built with SwiftUI and featuring iOS 26 Beta's Liquid Glass UI design system, Vesta provides a modern, privacy-focused AI assistant experience.
+Vesta is an AI-powered chat application for macOS that leverages Apple Intelligence's Foundation Models framework for on-device AI capabilities. Built with SwiftUI and featuring macOS 26 Beta's Liquid Glass UI design system, Vesta provides a modern, privacy-focused AI assistant experience.
 
 ## Features
 
 - **Apple Intelligence Integration**: Uses the Foundation Models framework for on-device AI processing
-- **Liquid Glass UI**: Modern iOS 26 Beta design with glass effects and animations  
+- **Liquid Glass UI**: Modern macOS 26 Beta design with glass effects and animations  
 - **Real-time Chat**: Streaming responses with smooth animations
 - **Voice Input**: Speech-to-text functionality for hands-free interaction
 - **Math Rendering**: LaTeX equation support with MathJax integration
@@ -13,8 +13,8 @@ Vesta is an AI-powered chat application for iOS that leverages Apple Intelligenc
 
 ## Requirements
 
-- **iOS**: 26.0+ Beta
-- **Device**: iPhone 15 Pro/Pro Max or iPhone 16 series (required for Apple Intelligence)
+- **macOS**: 26.0+ Beta
+- **Device**: Mac with M1 or later chip (M4 Pro recommended for Apple Intelligence)
 - **Xcode**: 26.0 Beta or later
 - **Swift**: 5.0+
 
@@ -46,7 +46,7 @@ The project uses Swift Package Manager for dependency management:
    - Ensure the bundle identifier is unique if needed
 
 4. **Build and run:**
-   - Select an iOS 26 Beta simulator or connected device
+   - Select macOS as the destination
    - Press Cmd+R to build and run
 
 ## Development Commands
@@ -61,13 +61,13 @@ xcodebuild -project Vesta.xcodeproj -scheme Vesta -configuration Debug build
 ### Testing
 ```bash
 # Run all tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS'
 
 # Run only unit tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16 -only-testing:VestaTests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS' -only-testing:VestaTests
 
 # Run only UI tests
-xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:VestaUITests
+xcodebuild test -project Vesta.xcodeproj -scheme Vesta -destination 'platform=macOS' -only-testing:VestaUITests
 ```
 
 ## Project Structure
@@ -118,9 +118,9 @@ Vesta/
 - WebKit-based MathJax rendering
 - Supports multiple LaTeX notation formats
 
-## iOS 26 Beta Features
+## macOS 26 Beta Features
 
-Vesta takes advantage of several iOS 26 Beta enhancements:
+Vesta takes advantage of several macOS 26 Beta enhancements:
 
 - **Liquid Glass UI**: Modern glass effects with materials and gradients
 - **Enhanced SwiftUI**: WebView integration, rich-text editing capabilities
@@ -166,6 +166,6 @@ For support, please open an issue on the repository or contact the development t
 
 ---
 
-**Bundle Identifier**: `soprano.Vesta`  
-**Deployment Target**: iOS 26.0 Beta  
+**Bundle Identifier**: `soprano.Vesta-mac`  
+**Deployment Target**: macOS 26.0 Beta  
 **Swift Version**: 5.0
