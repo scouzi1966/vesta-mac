@@ -507,7 +507,7 @@ struct ContentView: View {
             
             for try await partialText in stream {
                 await MainActor.run {
-                    streamingText = partialText
+                    streamingText = partialText.content
                 }
                 // Small delay to make it readable
                 try? await Task.sleep(nanoseconds: 50_000_000) // 50ms
