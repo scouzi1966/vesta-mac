@@ -11,6 +11,7 @@ import MarkdownUI
 import Speech
 import AVFoundation
 import WebKit
+import AppKit
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -554,12 +555,12 @@ struct MathMarkdownView: View {
                                 .foregroundStyle(foregroundColor)
                         }
                     case .latexBlock(let latex):
-                        MathView(equation: latex, displayStyle: true)
+                        MathView(equation: latex, displayStyle: true, textColor: foregroundColor)
                             .frame(height: 60)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 4)
                     case .latexInline(let latex):
-                        MathView(equation: latex, displayStyle: false)
+                        MathView(equation: latex, displayStyle: false, textColor: foregroundColor)
                             .frame(height: 40)
                             .frame(maxWidth: .infinity)
                     }
@@ -688,6 +689,7 @@ enum ContentPart {
 struct MathView: NSViewRepresentable {
     let equation: String
     let displayStyle: Bool
+    let textColor: Color
     
     func makeNSView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -697,6 +699,10 @@ struct MathView: NSViewRepresentable {
     
     func updateNSView(_ webView: WKWebView, context: Context) {
         let mathDelimiters = displayStyle ? "\\[" + equation + "\\]" : "\\(" + equation + "\\)"
+        
+        // Convert SwiftUI Color to CSS color
+        let cssColor = colorToCSS(textColor)
+        
         let html = """
         <!DOCTYPE html>
         <html>
@@ -716,7 +722,22 @@ struct MathView: NSViewRepresentable {
                     padding: 8px;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     background: transparent;
+                    color: \(cssColor) !important;
                     text-align: \(displayStyle ? "center" : "left");
+                }
+                /* Force MathJax to use our color */
+                .MathJax {
+                    color: \(cssColor) !important;
+                }
+                mjx-math {
+                    color: \(cssColor) !important;
+                }
+                mjx-mrow {
+                    color: \(cssColor) !important;
+                }
+                /* Target all MathJax elements */
+                [class*="mjx"] {
+                    color: \(cssColor) !important;
                 }
             </style>
         </head>
@@ -727,11 +748,43 @@ struct MathView: NSViewRepresentable {
         """
         webView.loadHTMLString(html, baseURL: nil)
     }
+    
+    private func colorToCSS(_ color: Color) -> String {
+        // Convert SwiftUI Color to NSColor to get RGB values
+        let nsColor: NSColor
+        
+        // Handle common SwiftUI colors
+        switch color {
+        case .primary:
+            nsColor = NSColor.labelColor // System primary text color
+        case .white:
+            nsColor = NSColor.white
+        case .black:
+            nsColor = NSColor.black
+        case .secondary:
+            nsColor = NSColor.secondaryLabelColor
+        default:
+            // Try to convert to NSColor via CGColor
+            nsColor = NSColor.labelColor // fallback to system label color
+        }
+        
+        // Convert to RGB hex
+        guard let rgbColor = nsColor.usingColorSpace(.sRGB) else {
+            return "#000000" // fallback to black
+        }
+        
+        let red = Int(round(rgbColor.redComponent * 255))
+        let green = Int(round(rgbColor.greenComponent * 255))  
+        let blue = Int(round(rgbColor.blueComponent * 255))
+        
+        return String(format: "#%02X%02X%02X", red, green, blue)
+    }
 }
 
 struct ChatBubble: View {
     let message: ChatMessage
     @State private var isVisible = false
+    @State private var showCopyFeedback = false
     
     var body: some View {
         HStack(alignment: .bottom, spacing: 12) {
@@ -821,6 +874,24 @@ struct ChatBubble: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
                         .background(.ultraThinMaterial, in: Capsule())
+                    
+                    // Copy button for AI messages only
+                    if !message.isUser {
+                        Button(action: {
+                            copyToClipboard(message.content)
+                        }) {
+                            Image(systemName: showCopyFeedback ? "checkmark" : "doc.on.doc")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.secondary)
+                                .frame(width: 16, height: 16)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(4)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .opacity(0.8)
+                        .scaleEffect(showCopyFeedback ? 1.1 : 1.0)
+                        .animation(.bouncy(duration: 0.3), value: showCopyFeedback)
+                    }
                 }
             }
             
@@ -852,6 +923,24 @@ struct ChatBubble: View {
         .onAppear {
             withAnimation(.bouncy(duration: 0.6, extraBounce: 0.1)) {
                 isVisible = true
+            }
+        }
+    }
+    
+    private func copyToClipboard(_ text: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+        
+        // Show feedback
+        withAnimation(.bouncy(duration: 0.3)) {
+            showCopyFeedback = true
+        }
+        
+        // Reset feedback after delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            withAnimation(.bouncy(duration: 0.3)) {
+                showCopyFeedback = false
             }
         }
     }
