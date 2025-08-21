@@ -34,6 +34,20 @@ struct ContentView: View {
     @State private var recognitionTask: SFSpeechRecognitionTask?
     @State private var audioEngine: AVAudioEngine = AVAudioEngine()
     
+    @State private var showInstructionsEditor = false
+    @State private var currentInstructions: String = """
+    You are a helpful AI assistant. Provide clear, concise, and friendly responses to user questions and requests. 
+    Keep responses conversational and maintain context from previous messages in our conversation.
+    
+    For mathematical content, use LaTeX notation:
+    - Inline math: $equation$
+    - Block math: $$equation$$
+    
+    Examples:
+    - Inline: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
+    - Block: $$E = mc^2$$
+    """
+
     var body: some View {
         ZStack {
             // macOS Background
@@ -287,6 +301,21 @@ struct ContentView: View {
                         .scaleEffect(isRecording ? 1.05 : 1.0)
                         .animation(.bouncy(duration: 0.3), value: isRecording)
                         
+                        // New instructions edit button
+                        Button(action: {
+                            showInstructionsEditor = true
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(.thinMaterial)
+                                    .frame(width: 28, height: 28)
+                                Image(systemName: "slider.horizontal.3")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundStyle(.yellow)
+                            }
+                        }
+                        .help("Edit Model Instructions")
+                        
                         // Glass text field
                         HStack(spacing: 8) {
                             TextField("Message Vesta AI...", text: $inputText, axis: .vertical)
@@ -363,21 +392,33 @@ struct ContentView: View {
             initializeSession()
             setupSpeechRecognition()
         }
+        .sheet(isPresented: $showInstructionsEditor) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Model Instructions")
+                    .font(.headline)
+                Text("Edit the instructions that guide Vesta AI's behavior. The default is suitable for most use cases.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $currentInstructions)
+                    .font(.body)
+                    .frame(minHeight: 200)
+                    .border(Color.gray.opacity(0.3), width: 1)
+                HStack {
+                    Spacer()
+                    Button("Save") {
+                        showInstructionsEditor = false
+                        initializeSession()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .padding()
+            .frame(width: 400)
+        }
     }
     
     private func initializeSession() {
-        session = LanguageModelSession(instructions: """
-        You are a helpful AI assistant. Provide clear, concise, and friendly responses to user questions and requests. 
-        Keep responses conversational and maintain context from previous messages in our conversation.
-        
-        For mathematical content, use LaTeX notation:
-        - Inline math: $equation$
-        - Block math: $$equation$$
-        
-        Examples:
-        - Inline: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
-        - Block: $$E = mc^2$$
-        """)
+        session = LanguageModelSession(instructions: currentInstructions)
     }
     
     private func setupSpeechRecognition() {
