@@ -12,6 +12,7 @@ import Speech
 import AVFoundation
 import WebKit
 import AppKit
+import UniformTypeIdentifiers
 
 struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
@@ -47,6 +48,13 @@ struct ContentView: View {
     - Inline: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
     - Block: $$E = mc^2$$
     """
+    
+    @State private var showAdapterPicker = false
+    @State private var currentAdapter: SystemLanguageModel.Adapter?
+    @State private var adapterName: String?
+    @State private var isLoadingAdapter = false
+    @State private var showAdapterError = false
+    @State private var adapterErrorMessage = ""
 
     var body: some View {
         ZStack {
@@ -76,9 +84,23 @@ struct ContentView: View {
                         Text("Vesta AI")
                             .font(.headline)
                             .fontWeight(.semibold)
-                        Text("Powered by Apple Intelligence")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Text("Powered by Apple Intelligence")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            if let adapterName = adapterName {
+                                Text("•")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text("Custom: \(adapterName)")
+                                    .font(.caption)
+                                    .foregroundStyle(.green)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 1)
+                                    .background(.green.opacity(0.1), in: Capsule())
+                            }
+                        }
                     }
                     
                     Spacer()
@@ -316,6 +338,58 @@ struct ContentView: View {
                         }
                         .help("Edit Model Instructions")
                         
+                        // LoRA Adapter loading button
+                        Button(action: {
+                            showAdapterPicker = true
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(.thinMaterial)
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(currentAdapter != nil ? 
+                                                LinearGradient(colors: [.green.opacity(0.6), .green.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                                                LinearGradient(colors: [.clear], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                                lineWidth: 1.5)
+                                    )
+                                
+                                if isLoadingAdapter {
+                                    ProgressView()
+                                        .scaleEffect(0.6)
+                                        .tint(.orange)
+                                } else {
+                                    Image(systemName: currentAdapter != nil ? "doc.badge.gearshape.fill" : "doc.badge.gearshape")
+                                        .font(.system(size: 12, weight: .medium))
+                                        .foregroundStyle(currentAdapter != nil ? .green : .orange)
+                                        .symbolEffect(.bounce, value: adapterName)
+                                }
+                            }
+                        }
+                        .help(currentAdapter != nil ? "Custom adapter loaded: \(adapterName ?? "Unknown")\nRight-click for options" : "Load LoRA Adapter")
+                        .disabled(isLoadingAdapter)
+                        .contextMenu {
+                            if currentAdapter != nil {
+                                Button("Load Different Adapter") {
+                                    showAdapterPicker = true
+                                }
+                                Button("Test Hardcoded Adapter") {
+                                    Task {
+                                        await loadHardcodedAdapter()
+                                    }
+                                }
+                                Button("Reset to Default Model") {
+                                    resetAdapter()
+                                }
+                            } else {
+                                Button("Test Hardcoded Adapter") {
+                                    Task {
+                                        await loadHardcodedAdapter()
+                                    }
+                                }
+                            }
+                        }
+                        
                         // Glass text field
                         HStack(spacing: 8) {
                             TextField("Message Vesta AI...", text: $inputText, axis: .vertical)
@@ -404,6 +478,10 @@ struct ContentView: View {
                     .frame(minHeight: 200)
                     .border(Color.gray.opacity(0.3), width: 1)
                 HStack {
+                    Button("Cancel") {
+                        showInstructionsEditor = false
+                    }
+                    .buttonStyle(.bordered)
                     Spacer()
                     Button("Save") {
                         showInstructionsEditor = false
@@ -415,10 +493,38 @@ struct ContentView: View {
             .padding()
             .frame(width: 400)
         }
+        .fileImporter(
+            isPresented: $showAdapterPicker,
+            allowedContentTypes: [
+                UTType("com.apple.foundation-model-adapter") ?? .folder,
+                UTType.package,
+                UTType.folder
+            ],
+            allowsMultipleSelection: false
+        ) { result in
+            Task {
+                await handleAdapterSelection(result)
+            }
+        }
+        .alert("Adapter Loading Error", isPresented: $showAdapterError) {
+            Button("OK") {
+                showAdapterError = false
+            }
+        } message: {
+            Text(adapterErrorMessage)
+        }
     }
     
     private func initializeSession() {
-        session = LanguageModelSession(instructions: currentInstructions)
+        if let adapter = currentAdapter {
+            // An instance of the system language model using your adapter
+            let customAdapterModel = SystemLanguageModel(adapter: adapter)
+            session = LanguageModelSession(model: customAdapterModel, instructions: currentInstructions)
+            print("Session initialized with custom adapter")
+        } else {
+            session = LanguageModelSession(instructions: currentInstructions)
+            print("Session initialized with default model")
+        }
     }
     
     private func setupSpeechRecognition() {
@@ -526,6 +632,65 @@ struct ContentView: View {
         messages.removeAll()
         inputText = ""
         isLoading = false
+        initializeSession()
+    }
+    
+    private func handleAdapterSelection(_ result: Result<[URL], Error>) async {
+        // For testing purposes, use hardcoded adapter path
+        await loadHardcodedAdapter()
+    }
+  /*
+    
+    // The absolute path to your adapter.
+    let localURL = URL(filePath: "absolute/path/to/my_adapter.fmadapter")
+
+
+    // Initialize the adapter by using the local URL.
+    let adapter = try SystemLanguageModel.Adapter(fileURL: localURL)
+
+   // An instance of the the system language model using your adapter.
+   let customAdapterModel = SystemLanguageModel(adapter: adapter)
+
+
+   // Create a session and prompt the model.
+   let session = LanguageModelSession(model: customAdapterModel)
+   let response = try await session.respond(to: "Your prompt here")
+*/
+    private func loadHardcodedAdapter() async {
+        await MainActor.run {
+            isLoadingAdapter = true
+        }
+        
+        do {
+            // The absolute path to your test adapter - the actual .fmadapter directory
+          let localURL = URL(filePath: "/Users/syl/Downloads/adapter_training_toolkit_v26_0_0-s/train/test_lora.fmadapter")
+ 
+            // Initialize the adapter by using the local URL
+            let adapter = try SystemLanguageModel.Adapter(fileURL: localURL)
+            
+            await MainActor.run {
+                currentAdapter = adapter
+                adapterName = "test_lora" // Hardcoded name for testing
+                isLoadingAdapter = false
+                
+                // Reinitialize session with new adapter
+                initializeSession()
+                print("Successfully loaded test adapter from: \(localURL.path)")
+            }
+            
+        } catch {
+            await MainActor.run {
+                isLoadingAdapter = false
+                adapterErrorMessage = "Failed to load test adapter: \(error.localizedDescription)"
+                showAdapterError = true
+                print("Failed to load test adapter: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func resetAdapter() {
+        currentAdapter = nil
+        adapterName = nil
         initializeSession()
     }
     
