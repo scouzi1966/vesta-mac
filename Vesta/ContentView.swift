@@ -373,19 +373,12 @@ struct ContentView: View {
                                 Button("Load Different Adapter") {
                                     showAdapterPicker = true
                                 }
-                                Button("Test Hardcoded Adapter") {
-                                    Task {
-                                        await loadHardcodedAdapter()
-                                    }
-                                }
                                 Button("Reset to Default Model") {
                                     resetAdapter()
                                 }
                             } else {
-                                Button("Test Hardcoded Adapter") {
-                                    Task {
-                                        await loadHardcodedAdapter()
-                                    }
+                                Button("Load Adapter…") {
+                                    showAdapterPicker = true
                                 }
                             }
                         }
@@ -530,7 +523,7 @@ struct ContentView: View {
     private func setupSpeechRecognition() {
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
         
-        SFSpeechRecognizer.requestAuthorization { authStatus in
+        SFSpeechRecognizer.requestAuthorization { _ in
             DispatchQueue.main.async {
                 // Handle different authorization states if needed
             }
@@ -549,9 +542,6 @@ struct ContentView: View {
         // Cancel any existing task
         recognitionTask?.cancel()
         recognitionTask = nil
-        
-        // macOS doesn't use AVAudioSession - permissions are handled differently
-        // Audio engine setup will handle the audio input directly
         
         // Create recognition request
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -635,55 +625,87 @@ struct ContentView: View {
         initializeSession()
     }
     
-    private func handleAdapterSelection(_ result: Result<[URL], Error>) async {
-        // For testing purposes, use hardcoded adapter path
-        await loadHardcodedAdapter()
-    }
-  /*
+    // MARK: - Adapter Loading and Validation
     
-    // The absolute path to your adapter.
-    let localURL = URL(filePath: "absolute/path/to/my_adapter.fmadapter")
-
-
-    // Initialize the adapter by using the local URL.
-    let adapter = try SystemLanguageModel.Adapter(fileURL: localURL)
-
-   // An instance of the the system language model using your adapter.
-   let customAdapterModel = SystemLanguageModel(adapter: adapter)
-
-
-   // Create a session and prompt the model.
-   let session = LanguageModelSession(model: customAdapterModel)
-   let response = try await session.respond(to: "Your prompt here")
-*/
-    private func loadHardcodedAdapter() async {
+    private func validateAdapterURL(_ url: URL) -> String? {
+        // Ensure it exists and is reachable
+        if !FileManager.default.fileExists(atPath: url.path) {
+            return "The adapter path does not exist.\n\nPath: \(url.path)"
+        }
+        
+        // Ensure it is a directory (adapters are packages/directories)
+        var isDir: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue else {
+            return "The adapter path is not a directory/package.\n\nPath: \(url.path)"
+        }
+        
+        // Prefer .fmadapter suffix (typical for Apple Foundation Model adapters)
+        // Note: Some adapters could be plain folders; we don't hard-fail on extension mismatch.
+        // If you want to enforce, uncomment the next lines:
+        // if url.pathExtension.lowercased() != "fmadapter" {
+        //     return "The selected directory does not have the .fmadapter extension.\n\nPath: \(url.lastPathComponent)"
+        // }
+        
+        return nil
+    }
+    
+    private func loadAdapter(from url: URL) async {
         await MainActor.run {
             isLoadingAdapter = true
         }
         
+        // Pre-validate path
+        if let reason = validateAdapterURL(url) {
+            await MainActor.run {
+                isLoadingAdapter = false
+                adapterErrorMessage = "Invalid adapter location.\n\(reason)"
+                showAdapterError = true
+            }
+            return
+        }
+        
         do {
-            // The absolute path to your test adapter - the actual .fmadapter directory
-          let localURL = URL(filePath: "/Users/syl/Downloads/adapter_training_toolkit_v26_0_0-s/train/test_lora.fmadapter")
- 
-            // Initialize the adapter by using the local URL
-            let adapter = try SystemLanguageModel.Adapter(fileURL: localURL)
-            
+            let adapter = try SystemLanguageModel.Adapter(fileURL: url)
             await MainActor.run {
                 currentAdapter = adapter
-                adapterName = "test_lora" // Hardcoded name for testing
+                adapterName = url.deletingPathExtension().lastPathComponent
                 isLoadingAdapter = false
-                
-                // Reinitialize session with new adapter
                 initializeSession()
-                print("Successfully loaded test adapter from: \(localURL.path)")
+                print("Successfully loaded adapter from: \(url.path)")
             }
-            
         } catch {
+            let nsError = error as NSError
+            let detailed = "Domain: \(nsError.domain) Code: \(nsError.code)"
             await MainActor.run {
                 isLoadingAdapter = false
-                adapterErrorMessage = "Failed to load test adapter: \(error.localizedDescription)"
+                adapterErrorMessage = """
+                Failed to load adapter.
+
+                Path: \(url.path)
+                Error: \(error.localizedDescription)
+                \(detailed)
+                """
                 showAdapterError = true
-                print("Failed to load test adapter: \(error.localizedDescription)")
+                print("Failed to load adapter at \(url.path): \(error) (\(detailed))")
+            }
+        }
+    }
+    
+    private func handleAdapterSelection(_ result: Result<[URL], Error>) async {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else {
+                await MainActor.run {
+                    adapterErrorMessage = "No adapter was selected."
+                    showAdapterError = true
+                }
+                return
+            }
+            await loadAdapter(from: url)
+        case .failure(let error):
+            await MainActor.run {
+                adapterErrorMessage = "Failed to pick adapter: \(error.localizedDescription)"
+                showAdapterError = true
             }
         }
     }
@@ -692,6 +714,7 @@ struct ContentView: View {
         currentAdapter = nil
         adapterName = nil
         initializeSession()
+        print("Adapter reset; using default model.")
     }
     
     private func getAIResponse(for userInput: String) async {
@@ -980,7 +1003,7 @@ struct MathView: NSViewRepresentable {
         }
         
         let red = Int(round(rgbColor.redComponent * 255))
-        let green = Int(round(rgbColor.greenComponent * 255))  
+        let green = Int(round(rgbColor.greenComponent * 255))
         let blue = Int(round(rgbColor.blueComponent * 255))
         
         return String(format: "#%02X%02X%02X", red, green, blue)
@@ -1155,4 +1178,3 @@ struct ChatBubble: View {
 #Preview {
     ContentView()
 }
-
